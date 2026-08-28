@@ -1,0 +1,62 @@
+[workspace]
+
+exclude = ["pocs"]
+
+[package]
+name = "epa"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89"
+license = "GPL-2.0-or-later"
+
+[dependencies]
+myelin = { git = "https://github.com/fruitvibes123/myelin", rev = "d2c413dbbdff1dbe0e4a45b4d63d75ffa202b232" }
+
+
+
+
+
+rmcp = { version = "1", features = ["server", "transport-io", "macros"], optional = true }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "io-std", "sync"], optional = true }
+
+
+
+creatine = { git = "https://github.com/fruitvibes123/creatine", rev = "29b95fd41282ce75c5b32ef9a78dacc55f73b51e", optional = true }
+
+
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+
+globset = "0.4"
+
+[features]
+
+
+
+
+creatine-inprocess = ["dep:creatine", "myelin/creatine-inprocess"]
+
+
+
+
+
+inprocess-model = ["creatine-inprocess", "creatine/qwen2"]
+
+
+
+
+mcp = ["dep:rmcp", "dep:tokio"]
+
+
+
+
+mcp-inprocess = ["mcp", "inprocess-model"]
+
+[[bin]]
+name = "epa-mcp"
+path = "src/bin/epa-mcp.rs"
+required-features = ["mcp"]
+
+[dev-dependencies]
+tempfile = "3"
